@@ -760,7 +760,8 @@ function StarHubUI:CreateWindow(cfg)
     local MainWindow = Instance.new("Frame", ScreenGui)
     MainWindow.Name = "MainWindow"
     MainWindow.Size = WinSize
-    MainWindow.Position = UDim2.new(0.5, -WinSize.X.Offset/2, 0.5, -WinSize.Y.Offset/2)
+    MainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
     MainWindow.BackgroundColor3 = Theme.Background
     MainWindow.BackgroundTransparency = StarHubUI.Settings.WindowTransparency
     MainWindow.BorderSizePixel = 0
@@ -777,19 +778,15 @@ function StarHubUI:CreateWindow(cfg)
 
     local winScale = Instance.new("UIScale", MainWindow)
 
+    local responsiveScale = 1.0
     local function UpdateResponsiveScale()
         local cam = workspace.CurrentCamera
         if not cam then return end
         local vp = cam.ViewportSize
-        local isTouch = UserInputService.TouchEnabled and not (UserInputService.KeyboardEnabled and UserInputService.MouseEnabled)
-
-        if isTouch or vp.X < 920 or vp.Y < 560 then
-            local scaleX = (vp.X * 0.92) / 720
-            local scaleY = (vp.Y * 0.90) / 485
-            winScale.Scale = math.clamp(math.min(scaleX, scaleY), 0.55, 0.92)
-        else
-            winScale.Scale = 1.0
-        end
+        if vp.X <= 0 or vp.Y <= 0 then return end
+        local fit = math.min((vp.X * 0.90) / 720, (vp.Y * 0.90) / 485)
+        responsiveScale = math.clamp(fit, 0.50, 1.0)
+        winScale.Scale = responsiveScale
     end
 
     UpdateResponsiveScale()
@@ -1251,8 +1248,7 @@ function StarHubUI:CreateWindow(cfg)
         if show == nil then show = not MainWindow.Visible end
         if show then
             MainWindow.Visible = true
-            winScale.Scale = 0.8
-            MainWindow.Position = UDim2.new(0.5, -WinSize.X.Offset/2, 0.5, -WinSize.Y.Offset/2)
+            winScale.Scale = responsiveScale * 0.8
             MainWindow.Size = isMinimized and UDim2.new(0, WinSize.X.Offset, 0, 44) or WinSize
             if isMinimized then
                 HeaderLine.Visible = false
@@ -1263,20 +1259,21 @@ function StarHubUI:CreateWindow(cfg)
                 if BodyContainer then BodyContainer.Visible = true end
             end
             PlaySound("ToggleOn")
-            Tween(winScale, 0.35, {Scale = 1}, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            Tween(winScale, 0.35, {Scale = responsiveScale}, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         else
             PlaySound("ToggleOff")
-            local tw = Tween(winScale, 0.22, {Scale = 0.8}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+            local hideScale = responsiveScale * 0.8
+            local tw = Tween(winScale, 0.22, {Scale = hideScale}, Enum.EasingStyle.Back, Enum.EasingDirection.In)
             tw.Completed:Connect(function()
-                if not MainWindow.Visible or winScale.Scale <= 0.85 then
+                if not MainWindow.Visible or winScale.Scale <= responsiveScale * 0.85 then
                     MainWindow.Visible = false
-                    winScale.Scale = 1
+                    winScale.Scale = responsiveScale
                 end
             end)
             task.delay(0.24, function()
-                if not MainWindow.Visible or winScale.Scale <= 0.85 then
+                if not MainWindow.Visible or winScale.Scale <= responsiveScale * 0.85 then
                     MainWindow.Visible = false
-                    winScale.Scale = 1
+                    winScale.Scale = responsiveScale
                 end
             end)
         end
@@ -1401,8 +1398,9 @@ function StarHubUI:CreateWindow(cfg)
     RegisterElement("Borders", bsStroke)
 
     local BrandIcon = Instance.new("ImageLabel", BrandSquircle)
-    BrandIcon.Size = UDim2.new(0, 62, 0, 62)
-    BrandIcon.Position = UDim2.new(0.5, -31, 0.5, -31)
+    BrandIcon.Size = UDim2.new(0.84, 0, 0.84, 0)
+    BrandIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    BrandIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     BrandIcon.BackgroundTransparency = 1
     BrandIcon.ScaleType = Enum.ScaleType.Fit
     BrandIcon.Image = ResolvedLogo
@@ -1497,7 +1495,7 @@ function StarHubUI:CreateWindow(cfg)
     FloatingSquircle.BackgroundColor3 = Color3.fromRGB(12, 13, 17)
     FloatingSquircle.BackgroundTransparency = 0.05
     FloatingSquircle.Visible = StarHubUI.Settings.ShowFloatingToggle
-    Instance.new("UICorner", FloatingSquircle).CornerRadius = UDim.new(1, 0)
+    Instance.new("UICorner", FloatingSquircle).CornerRadius = UDim.new(0, 16)
 
     local flScale = Instance.new("UIScale", FloatingSquircle)
     flScale.Scale = 1
@@ -1530,7 +1528,7 @@ function StarHubUI:CreateWindow(cfg)
     flAura.BackgroundTransparency = 0.88
     flAura.BorderSizePixel = 0
     flAura.ZIndex = 0
-    Instance.new("UICorner", flAura).CornerRadius = UDim.new(1, 0)
+    Instance.new("UICorner", flAura).CornerRadius = UDim.new(0, 18)
     RegisterElement("Accents", flAura)
 
     task.spawn(function()
@@ -1558,7 +1556,7 @@ function StarHubUI:CreateWindow(cfg)
     local flIconShadow = Instance.new("ImageLabel", FloatingSquircle)
     flIconShadow.Name = "IconShadow"
     flIconShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    flIconShadow.Size = UDim2.new(0, 28, 0, 28)
+    flIconShadow.Size = UDim2.new(0.58, 0, 0.58, 0)
     flIconShadow.Position = UDim2.new(0.5, 1, 0.5, 2)
     flIconShadow.BackgroundTransparency = 1
     flIconShadow.ScaleType = Enum.ScaleType.Fit
@@ -1570,7 +1568,7 @@ function StarHubUI:CreateWindow(cfg)
     local flIcon = Instance.new("ImageLabel", FloatingSquircle)
     flIcon.Name = "MainLogo"
     flIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    flIcon.Size = UDim2.new(0, 28, 0, 28)
+    flIcon.Size = UDim2.new(0.58, 0, 0.58, 0)
     flIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     flIcon.BackgroundTransparency = 1
     flIcon.ScaleType = Enum.ScaleType.Fit
@@ -2180,49 +2178,55 @@ function StarHubUI:CreateWindow(cfg)
 
         local TabBtn = Instance.new("TextButton", NavScroll)
         TabBtn.Name = "Nav_" .. TabTitle
-        TabBtn.Size = UDim2.new(1, 0, 0, 38)
+        TabBtn.Size = UDim2.new(1, 0, 0, 44)
         TabBtn.BackgroundColor3 = Theme.SubBox
-        TabBtn.BackgroundTransparency = 0.85
+        TabBtn.BackgroundTransparency = 1
         TabBtn.Text = ""
         TabBtn.AutoButtonColor = false
         TabBtn.LayoutOrder = LayoutOrder
-        Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 10)
+        Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 8)
 
         local tabStroke = Instance.new("UIStroke", TabBtn)
         tabStroke.Name = "TabStroke"
         tabStroke.Color = Theme.Border
         tabStroke.Thickness = 1
-        tabStroke.Transparency = 0.75
+        tabStroke.Transparency = 1
+
+        local activeBar = Instance.new("Frame", TabBtn)
+        activeBar.Name = "ActiveBar"
+        activeBar.Size = UDim2.new(0, 3, 0, 24)
+        activeBar.AnchorPoint = Vector2.new(0, 0.5)
+        activeBar.Position = UDim2.new(0, 2, 0.5, 0)
+        activeBar.BackgroundColor3 = Theme.Accent
+        activeBar.BackgroundTransparency = 1
+        activeBar.BorderSizePixel = 0
+        activeBar.Visible = false
+        Instance.new("UICorner", activeBar).CornerRadius = UDim.new(1, 0)
+        RegisterElement("Accents", activeBar)
 
         local activeGlow = Instance.new("Frame", TabBtn)
         activeGlow.Name = "ActiveGlow"
         activeGlow.Size = UDim2.new(1, 0, 1, 0)
         activeGlow.BackgroundColor3 = Theme.Accent
-        activeGlow.BackgroundTransparency = 0.8
+        activeGlow.BackgroundTransparency = 0.88
         activeGlow.BorderSizePixel = 0
         activeGlow.Visible = false
-        Instance.new("UICorner", activeGlow).CornerRadius = UDim.new(0, 10)
-        local agGrad = Instance.new("UIGradient", activeGlow)
-        agGrad.Color = ColorSequence.new(Theme.Accent)
-        agGrad.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0, 0.65),
-            NumberSequenceKeypoint.new(1, 1)
-        })
+        Instance.new("UICorner", activeGlow).CornerRadius = UDim.new(0, 8)
         RegisterElement("Accents", activeGlow)
 
         local iconBadge = Instance.new("Frame", TabBtn)
         iconBadge.Name = "IconBadge"
-        iconBadge.Size = UDim2.new(0, 26, 0, 26)
-        iconBadge.Position = UDim2.new(0, 8, 0.5, -13)
+        iconBadge.Size = UDim2.new(0, 28, 0, 28)
+        iconBadge.Position = UDim2.new(0, 10, 0.5, -14)
         iconBadge.BackgroundColor3 = Theme.SubBox
-        iconBadge.BackgroundTransparency = 0.45
+        iconBadge.BackgroundTransparency = 0.3
         iconBadge.BorderSizePixel = 0
-        Instance.new("UICorner", iconBadge).CornerRadius = UDim.new(0, 8)
+        Instance.new("UICorner", iconBadge).CornerRadius = UDim.new(0, 7)
         local ibStroke = Instance.new("UIStroke", iconBadge)
         ibStroke.Name = "BadgeStroke"
         ibStroke.Color = Theme.Border
         ibStroke.Thickness = 1
-        ibStroke.Transparency = 0.6
+        ibStroke.Transparency = 0.5
 
         local tIcon = Instance.new("ImageLabel", iconBadge)
         tIcon.Name = "TabIcon"
@@ -2234,26 +2238,14 @@ function StarHubUI:CreateWindow(cfg)
 
         local tName = Instance.new("TextLabel", TabBtn)
         tName.Name = "TabName"
-        tName.Size = UDim2.new(1, -70, 1, 0)
-        tName.Position = UDim2.new(0, 40, 0, 0)
+        tName.Size = UDim2.new(1, -54, 1, 0)
+        tName.Position = UDim2.new(0, 46, 0, 0)
         tName.BackgroundTransparency = 1
         tName.Font = Enum.Font.GothamMedium
-        tName.TextSize = 11.5
+        tName.TextSize = 12
         tName.TextColor3 = Theme.TextDim
         tName.TextXAlignment = Enum.TextXAlignment.Left
         tName.Text = TabTitle
-
-        local rightIndicator = Instance.new("ImageLabel", TabBtn)
-        rightIndicator.Name = "RightIndicator"
-        rightIndicator.Size = UDim2.new(0, 12, 0, 12)
-        rightIndicator.Position = UDim2.new(1, -16, 0.5, -6)
-        rightIndicator.BackgroundTransparency = 1
-        rightIndicator.Image = StarHubUI.Icons.ChevronDown
-        rightIndicator.Rotation = -90
-        rightIndicator.ImageColor3 = Theme.AccentLight
-        rightIndicator.ImageTransparency = 1
-        rightIndicator.Visible = false
-        RegisterElement("Accents", rightIndicator)
 
         if BadgeText then
             local bTag = Instance.new("Frame", TabBtn)
@@ -2317,40 +2309,17 @@ function StarHubUI:CreateWindow(cfg)
 
         TabBtn.MouseEnter:Connect(function()
             if WindowObj.ActiveTab ~= TabObj then
-                Tween(tabStroke, 0.18, {Color = Theme.BorderLight, Transparency = 0.2, Thickness = 1.2})
-                Tween(TabBtn, 0.18, {BackgroundColor3 = Theme.SubBox, BackgroundTransparency = 0.35})
-                Tween(iconBadge, 0.18, {Position = UDim2.new(0, 11, 0.5, -13), BackgroundTransparency = 0.25})
-                Tween(ibStroke, 0.18, {Color = Theme.BorderLight, Transparency = 0.25})
-                Tween(tName, 0.18, {Position = UDim2.new(0, 44, 0, 0), TextColor3 = Theme.TextTitle})
-                Tween(tIcon, 0.18, {ImageColor3 = Color3.fromRGB(255, 255, 255)})
-            else
-                Tween(tabStroke, 0.18, {Color = Theme.AccentLight, Transparency = 0.1, Thickness = 1.4})
-                Tween(tName, 0.18, {Position = UDim2.new(0, 43, 0, 0)})
-                Tween(iconBadge, 0.18, {Position = UDim2.new(0, 10, 0.5, -13)})
-                if rightIndicator and not BadgeText then
-                    rightIndicator.ImageColor3 = Theme.AccentLight
-                    Tween(rightIndicator, 0.18, {Position = UDim2.new(1, -14, 0.5, -6), ImageTransparency = 0.1})
-                end
+                Tween(TabBtn, 0.15, {BackgroundTransparency = 0.82})
+                Tween(tName, 0.15, {TextColor3 = Theme.TextBody})
+                Tween(tIcon, 0.15, {ImageColor3 = Theme.TextBody})
             end
         end)
 
         TabBtn.MouseLeave:Connect(function()
             if WindowObj.ActiveTab ~= TabObj then
-                Tween(tabStroke, 0.18, {Color = Theme.Border, Transparency = 0.75, Thickness = 1})
-                Tween(TabBtn, 0.18, {BackgroundColor3 = Theme.SubBox, BackgroundTransparency = 0.85})
-                Tween(iconBadge, 0.18, {Position = UDim2.new(0, 8, 0.5, -13), BackgroundTransparency = 0.45})
-                Tween(ibStroke, 0.18, {Color = Theme.Border, Transparency = 0.6})
-                Tween(tName, 0.18, {Position = UDim2.new(0, 40, 0, 0), TextColor3 = Theme.TextDim})
-                Tween(tIcon, 0.18, {ImageColor3 = Theme.TextDim})
-            else
-                Tween(tabStroke, 0.18, {Color = Theme.Accent, Transparency = 0.2, Thickness = 1.2})
-                Tween(TabBtn, 0.18, {BackgroundColor3 = Theme.SubBox, BackgroundTransparency = 0.15})
-                Tween(tName, 0.18, {Position = UDim2.new(0, 40, 0, 0)})
-                Tween(iconBadge, 0.18, {Position = UDim2.new(0, 8, 0.5, -13)})
-                if rightIndicator and not BadgeText then
-                    rightIndicator.ImageColor3 = Theme.AccentLight
-                    Tween(rightIndicator, 0.18, {Position = UDim2.new(1, -16, 0.5, -6), ImageTransparency = 0.35})
-                end
+                Tween(TabBtn, 0.15, {BackgroundTransparency = 1})
+                Tween(tName, 0.15, {TextColor3 = Theme.TextDim})
+                Tween(tIcon, 0.15, {ImageColor3 = Theme.TextDim})
             end
         end)
 
@@ -2361,24 +2330,19 @@ function StarHubUI:CreateWindow(cfg)
 
             for _, t in ipairs(WindowObj.Tabs) do
                 t.Page.Visible = false
-                t.Button.BackgroundColor3 = Theme.SubBox
-                t.Button.BackgroundTransparency = 0.85
-                local st = t.Button:FindFirstChild("TabStroke")
-                if st then
-                    st.Color = Theme.Border
-                    st.Transparency = 0.75
-                    st.Thickness = 1
-                end
+                t.Button.BackgroundTransparency = 1
                 local ag = t.Button:FindFirstChild("ActiveGlow")
                 if ag then ag.Visible = false end
-                local ri = t.Button:FindFirstChild("RightIndicator")
-                if ri then ri.Visible = false ri.ImageTransparency = 1 end
+                local ab = t.Button:FindFirstChild("ActiveBar")
+                if ab then ab.Visible = false ab.BackgroundTransparency = 1 end
+                local st = t.Button:FindFirstChild("TabStroke")
+                if st then st.Transparency = 1 end
                 local ib = t.Button:FindFirstChild("IconBadge")
                 if ib then
                     ib.BackgroundColor3 = Theme.SubBox
-                    ib.BackgroundTransparency = 0.45
+                    ib.BackgroundTransparency = 0.3
                     local ibs = ib:FindFirstChild("BadgeStroke")
-                    if ibs then ibs.Color = Theme.Border ibs.Transparency = 0.6 ibs.Thickness = 1 end
+                    if ibs then ibs.Color = Theme.Border ibs.Transparency = 0.5 ibs.Thickness = 1 end
                     local ic = ib:FindFirstChild("TabIcon") or ib:FindFirstChildOfClass("ImageLabel")
                     if ic then ic.ImageColor3 = Theme.TextDim end
                 end
@@ -2397,25 +2361,19 @@ function StarHubUI:CreateWindow(cfg)
 
             activeGlow.Visible = true
             TabBtn.BackgroundColor3 = Theme.SubBox
-            TabBtn.BackgroundTransparency = 0.15
-            tabStroke.Color = Theme.Accent
-            tabStroke.Transparency = 0.2
-            tabStroke.Thickness = 1.2
+            TabBtn.BackgroundTransparency = 0.88
+
+            activeBar.Visible = true
+            Tween(activeBar, 0.2, {BackgroundTransparency = 0}, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
 
             iconBadge.BackgroundColor3 = Theme.Accent
-            iconBadge.BackgroundTransparency = 0.12
+            iconBadge.BackgroundTransparency = 0.1
             ibStroke.Color = Theme.AccentLight
             ibStroke.Transparency = 0
             ibStroke.Thickness = 1.2
             tName.TextColor3 = Theme.TextTitle
             tName.Font = Enum.Font.GothamBold
             tIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-
-            if rightIndicator and not BadgeText then
-                rightIndicator.Visible = true
-                rightIndicator.ImageColor3 = Theme.AccentLight
-                Tween(rightIndicator, 0.2, {ImageTransparency = 0.35})
-            end
         end
 
         TabBtn.MouseButton1Click:Connect(Activate)
@@ -2681,7 +2639,8 @@ function StarHubUI:CreateWindow(cfg)
 
                 local Knob = Instance.new("Frame", Track)
                 Knob.Size = UDim2.new(0, 12, 0, 12)
-                Knob.Position = UDim2.new(ratio, -6, 0.5, -6)
+                Knob.AnchorPoint = Vector2.new(0.5, 0.5)
+                Knob.Position = UDim2.new(ratio, 0, 0.5, 0)
                 Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Instance.new("UICorner", Knob).CornerRadius = UDim.new(1, 0)
 
@@ -2703,7 +2662,7 @@ function StarHubUI:CreateWindow(cfg)
                     currentVal = math.clamp(v, minVal, maxVal)
                     local r = (currentVal - minVal) / (maxVal - minVal)
                     Fill.Size = UDim2.new(r, 0, 1, 0)
-                    Knob.Position = UDim2.new(r, -6, 0.5, -6)
+                    Knob.Position = UDim2.new(r, 0, 0.5, 0)
                     valLbl.Text = tostring(currentVal) .. " " .. suffix
                     valLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
                     pcall(callback, currentVal)
@@ -2808,7 +2767,11 @@ function StarHubUI:CreateWindow(cfg)
                     ob.Text = ""
                     ob.AutoButtonColor = false
                     Instance.new("UICorner", ob).CornerRadius = UDim.new(0, 8)
+                    local obSt = Instance.new("UIStroke", ob)
+                    obSt.Color = Theme.Border
+                    obSt.Thickness = 0.8
                     RegisterElement("Boxes", ob)
+                    RegisterElement("Borders", obSt)
 
                     local ot = Instance.new("TextLabel", ob)
                     ot.Size = UDim2.new(1, -12, 1, 0)
