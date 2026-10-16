@@ -1556,29 +1556,29 @@ function StarHubUI:CreateWindow(cfg)
     local flIconShadow = Instance.new("ImageLabel", FloatingSquircle)
     flIconShadow.Name = "IconShadow"
     flIconShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    flIconShadow.Size = UDim2.new(1, -6, 1, -6)
+    flIconShadow.Size = UDim2.new(1, 0, 1, 0)
     flIconShadow.Position = UDim2.new(0.5, 1, 0.5, 2)
     flIconShadow.BackgroundTransparency = 1
-    flIconShadow.ScaleType = Enum.ScaleType.Crop
+    flIconShadow.ScaleType = Enum.ScaleType.Stretch
     flIconShadow.Image = ResolvedLogo
     flIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
     flIconShadow.ImageTransparency = 0.6
     flIconShadow.ZIndex = 5
-    Instance.new("UICorner", flIconShadow).CornerRadius = UDim.new(0, 14)
+    Instance.new("UICorner", flIconShadow).CornerRadius = UDim.new(0, 16)
 
     local flIcon = Instance.new("ImageLabel", FloatingSquircle)
     flIcon.Name = "MainLogo"
     flIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    flIcon.Size = UDim2.new(1, -6, 1, -6)
+    flIcon.Size = UDim2.new(1, 0, 1, 0)
     flIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     flIcon.BackgroundTransparency = 1
-    flIcon.ScaleType = Enum.ScaleType.Crop
+    flIcon.ScaleType = Enum.ScaleType.Stretch
     flIcon.Image = ResolvedLogo
     flIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
     flIcon.ImageTransparency = 0.02
     flIcon.Rotation = 0
     flIcon.ZIndex = 10
-    Instance.new("UICorner", flIcon).CornerRadius = UDim.new(0, 14)
+    Instance.new("UICorner", flIcon).CornerRadius = UDim.new(0, 16)
     local flIconScale = Instance.new("UIScale", flIcon)
 
     RunService.RenderStepped:Connect(function()
