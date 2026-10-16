@@ -13,7 +13,7 @@
 
 [![Roblox](https://img.shields.io/badge/Platform-Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://roblox.com)
 [![Language](https://img.shields.io/badge/Language-Luau-000080?style=for-the-badge&logo=lua&logoColor=white)](https://luau.org)
-[![Version](https://img.shields.io/badge/Version-5.7.0-brightgreen?style=for-the-badge)](https://github.com/STARLARP/StarHub-UI)
+[![Version](https://img.shields.io/badge/Version-5.7.0-brightgreen?style=for-the-badge)](https://github.com/voidhub9-dotcom/StarHub-UI)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 </div>
@@ -64,7 +64,7 @@
 Load the library into your script executor using `loadstring`:
 
 ```lua
-local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/STARLARP/StarHub-UI/main/StarHubUI.lua"))()
+local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/voidhub9-dotcom/StarHub-UI/main/StarHubUI.lua"))()
 ```
 
 ### Basic Setup
@@ -72,7 +72,7 @@ local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/STA
 Here is a quick starter example demonstrating how to initialize a window, create navigation tabs, and add interactive controls:
 
 ```lua
-local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/STARLARP/StarHub-UI/main/StarHubUI.lua"))()
+local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/voidhub9-dotcom/StarHub-UI/main/StarHubUI.lua"))()
 
 -- 1. Create Window
 local Window = StarHubUI:CreateWindow({
