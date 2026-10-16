@@ -367,6 +367,19 @@ local SettingsTab = Window:CreateTab({
 Window:CreateDualColumnSettings(SettingsTab)
 ```
 
+#### Floating Toggle & Custom Logo
+
+The draggable floating toggle uses the configured logo as a full-cover image with rounded corners, themed glow, and a matching shadow. The logo can be set when creating the window or changed live from **Settings → Branding & Background**:
+
+```lua
+local Window = StarHubUI:CreateWindow({
+    Title = "StarHub UI",
+    Logo = "https://example.com/logo.png" -- URL, Roblox asset ID, or rbxassetid:// value
+})
+```
+
+The **CUSTOM LOGO...** setting updates both the main interface branding and the floating toggle, then saves the value for the next launch.
+
 ---
 
 ### 15. Auto-Save Configuration Engine
