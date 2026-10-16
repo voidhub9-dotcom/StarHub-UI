@@ -1507,15 +1507,14 @@ function StarHubUI:CreateWindow(cfg)
 
     local flGrad = Instance.new("UIGradient", flCircleStroke)
     flGrad.Name = "ChasingRingGrad"
-    local c1 = Theme.Grad1 or Theme.Accent
-    local c2 = Theme.Grad2 or Theme.AccentLight
+    local c1 = Color3.fromRGB(255, 255, 255)
+    local c2 = Color3.fromRGB(150, 150, 150)
     flGrad.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, c1),
         ColorSequenceKeypoint.new(0.50, c2),
         ColorSequenceKeypoint.new(1.00, c1)
     })
     flGrad.Rotation = 0
-    RegisterElement("Gradients", flGrad)
 
     RegisterElement("Boxes", FloatingSquircle)
 
@@ -1524,12 +1523,11 @@ function StarHubUI:CreateWindow(cfg)
     flAura.AnchorPoint = Vector2.new(0.5, 0.5)
     flAura.Position = UDim2.new(0.5, 0, 0.5, 0)
     flAura.Size = UDim2.new(1, 10, 1, 10)
-    flAura.BackgroundColor3 = Theme.Accent
+    flAura.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     flAura.BackgroundTransparency = 0.88
     flAura.BorderSizePixel = 0
     flAura.ZIndex = 0
     Instance.new("UICorner", flAura).CornerRadius = UDim.new(0, 18)
-    RegisterElement("Accents", flAura)
 
     task.spawn(function()
         while FloatingSquircle and FloatingSquircle.Parent do
@@ -1546,12 +1544,11 @@ function StarHubUI:CreateWindow(cfg)
     flLogoGlow.AnchorPoint = Vector2.new(0.5, 0.5)
     flLogoGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
     flLogoGlow.Size = UDim2.new(1, -8, 1, -8)
-    flLogoGlow.BackgroundColor3 = Theme.Accent
+    flLogoGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     flLogoGlow.BackgroundTransparency = 0.75
     flLogoGlow.BorderSizePixel = 0
     flLogoGlow.ZIndex = 3
     Instance.new("UICorner", flLogoGlow).CornerRadius = UDim.new(1, 0)
-    RegisterElement("Accents", flLogoGlow)
 
     local flIconShadow = Instance.new("ImageLabel", FloatingSquircle)
     flIconShadow.Name = "IconShadow"
@@ -1635,7 +1632,7 @@ function StarHubUI:CreateWindow(cfg)
         ripple.AnchorPoint = Vector2.new(0.5, 0.5)
         ripple.Position = UDim2.new(0.5, 0, 0.5, 0)
         ripple.Size = UDim2.new(0, 10, 0, 10)
-        ripple.BackgroundColor3 = Theme.AccentLight
+        ripple.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         ripple.BackgroundTransparency = 0.35
         ripple.BorderSizePixel = 0
         ripple.ZIndex = 1
