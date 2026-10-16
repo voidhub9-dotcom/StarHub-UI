@@ -1,5 +1,5 @@
 _G.STARHUB_LIBRARY_ONLY = true
-local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/STARLARP/StarHub-UI/main/StarHubUI.lua"))()
+local StarHubUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/voidhub9-dotcom/StarHub-UI/main/StarHubUI.lua"))()
 _G.STARHUB_LIBRARY_ONLY = nil
 
 local Window = StarHubUI:CreateWindow({
